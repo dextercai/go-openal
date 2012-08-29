@@ -18,12 +18,26 @@
 // lot higher, each of those calls triggers an allocation.
 package alc
 
+//#cgo linux LDFLAGS: -lopenal
+//#include <stdlib.h>
+//#include <AL/al.h>
+//#include <AL/alc.h>
 /*
-#cgo linux LDFLAGS: -lopenal
-#include <stdlib.h>
-#include <AL/al.h>
-#include <AL/alc.h>
-#include "wrappers.c"
+ALCdevice *walcOpenDevice(const char *devicename) {
+	return alcOpenDevice(devicename);
+}
+const ALCchar *alcGetString( ALCdevice *device, ALCenum param );
+void walcGetIntegerv(ALCdevice *device, ALCenum param, ALCsizei size, void *data) {
+	alcGetIntegerv(device, param, size, data);
+}
+ALCdevice *walcCaptureOpenDevice(const char *devicename, ALCuint frequency, ALCenum format, ALCsizei buffersize) {
+	return alcCaptureOpenDevice(devicename, frequency, format, buffersize);
+}
+ALCint walcGetInteger(ALCdevice *device, ALCenum param) {
+	ALCint result;
+	alcGetIntegerv(device, param, 1, &result);
+	return result;
+}
 */
 import "C"
 import "unsafe"
