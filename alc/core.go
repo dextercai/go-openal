@@ -18,6 +18,7 @@
 package alc
 
 /*
+#cgo linux LDFLAGS: -lopenal
 #include <stdlib.h>
 #include <AL/al.h>
 #include <AL/alc.h>
@@ -29,136 +30,132 @@ import "unsafe"
 import "openal/al"
 
 const (
-	alcFalse = 0;
-	alcTrue = 1;
+	alcFalse = 0
+	alcTrue  = 1
 )
 
 // Error codes returned by Device.GetError().
 const (
-	NoError = 0;
-	InvalidDevice =0xA001;
-	InvalidContext = 0xA002;
-	InvalidEnum = 0xA003;
-	InvalidValue = 0xA004;
-	OutOfMemory = 0xA005;
+	NoError        = 0
+	InvalidDevice  = 0xA001
+	InvalidContext = 0xA002
+	InvalidEnum    = 0xA003
+	InvalidValue   = 0xA004
+	OutOfMemory    = 0xA005
 )
 
 const (
-	Frequency = 0x1007; // int Hz
-	Refresh = 0x1008; // int Hz
-	Sync = 0x1009; // bool
-	MonoSources = 0x1010; // int
-	StereoSources = 0x1011; // int
+	Frequency     = 0x1007 // int Hz
+	Refresh       = 0x1008 // int Hz
+	Sync          = 0x1009 // bool
+	MonoSources   = 0x1010 // int
+	StereoSources = 0x1011 // int
 )
 
 // The Specifier string for default device?
 const (
-	DefaultDeviceSpecifier = 0x1004;
-	DeviceSpecifier = 0x1005;
-	Extensions = 0x1006;
+	DefaultDeviceSpecifier = 0x1004
+	DeviceSpecifier        = 0x1005
+	Extensions             = 0x1006
 )
 
 // ?
 const (
-	MajorVersion = 0x1000;
-	MinorVersion = 0x1001;
+	MajorVersion = 0x1000
+	MinorVersion = 0x1001
 )
 
 // ?
 const (
-	AttributesSize = 0x1002;
-	AllAttributes = 0x1003;
+	AttributesSize = 0x1002
+	AllAttributes  = 0x1003
 )
 
 // Capture extension
 const (
-	CaptureDeviceSpecifier = 0x310;
-	CaptureDefaultDeviceSpecifier = 0x311;
-	CaptureSamples = 0x312;
+	CaptureDeviceSpecifier        = 0x310
+	CaptureDefaultDeviceSpecifier = 0x311
+	CaptureSamples                = 0x312
 )
 
-
 type Device struct {
-	handle *C.ALCdevice;
+	handle *C.ALCdevice
 }
 
 // GetError() returns the most recent error generated
 // in the AL state machine.
 func (self *Device) GetError() uint32 {
-	return uint32(C.alcGetError(self.handle));
+	return uint32(C.alcGetError(self.handle))
 }
 
 func OpenDevice(name string) *Device {
 	// TODO: turn empty string into nil?
 	// TODO: what about an error return?
-	p := C.CString(name);
-	h := C.walcOpenDevice(p);
-	C.free(unsafe.Pointer(p));
-	return &Device{h};
+	p := C.CString(name)
+	h := C.walcOpenDevice(p)
+	C.free(unsafe.Pointer(p))
+	return &Device{h}
 }
 
 func (self *Device) CloseDevice() bool {
 	//TODO: really a method? or not?
-	return C.alcCloseDevice(self.handle) != 0;
+	return C.alcCloseDevice(self.handle) != 0
 }
 
 func (self *Device) CreateContext() *Context {
 	// TODO: really a method?
 	// TODO: attrlist support
-	return &Context{C.alcCreateContext(self.handle, nil)};
+	return &Context{C.alcCreateContext(self.handle, nil)}
 }
 
 func (self *Device) GetIntegerv(param uint32, size uint32) (result []int32) {
-	result = make([]int32, size);
-	C.walcGetIntegerv(self.handle, C.ALCenum(param), C.ALCsizei(size), unsafe.Pointer(&result[0]));
-	return;
+	result = make([]int32, size)
+	C.walcGetIntegerv(self.handle, C.ALCenum(param), C.ALCsizei(size), unsafe.Pointer(&result[0]))
+	return
 }
 
 func (self *Device) GetInteger(param uint32) int32 {
-	return int32(C.walcGetInteger(self.handle, C.ALCenum(param)));
+	return int32(C.walcGetInteger(self.handle, C.ALCenum(param)))
 }
 
-
-
-
 type CaptureDevice struct {
-	Device;
-	sampleSize uint32;
+	Device
+	sampleSize uint32
 }
 
 func CaptureOpenDevice(name string, freq uint32, format uint32, size uint32) *CaptureDevice {
 	// TODO: turn empty string into nil?
 	// TODO: what about an error return?
-	p := C.CString(name);
-	h := C.walcCaptureOpenDevice(p, C.ALCuint(freq), C.ALCenum(format), C.ALCsizei(size));
-	C.free(unsafe.Pointer(p));
-	s := map[uint32]uint32{al.FormatMono8: 1, al.FormatMono16: 2, al.FormatStereo8: 2, al.FormatStereo16: 4}[format];
-	return &CaptureDevice{Device{h},s};
+	p := C.CString(name)
+	h := C.walcCaptureOpenDevice(p, C.ALCuint(freq), C.ALCenum(format), C.ALCsizei(size))
+	C.free(unsafe.Pointer(p))
+	s := map[uint32]uint32{al.FormatMono8: 1, al.FormatMono16: 2, al.FormatStereo8: 2, al.FormatStereo16: 4}[format]
+	return &CaptureDevice{Device{h}, s}
 }
 
 // XXX: Override Device.CloseDevice to make sure the correct
 // C function is called even if someone decides to use this
 // behind an interface.
 func (self *CaptureDevice) CloseDevice() bool {
-	return C.alcCaptureCloseDevice(self.handle) != 0;
+	return C.alcCaptureCloseDevice(self.handle) != 0
 }
 
 func (self *CaptureDevice) CaptureCloseDevice() bool {
-	return self.CloseDevice();
+	return self.CloseDevice()
 }
 
 func (self *CaptureDevice) CaptureStart() {
-	C.alcCaptureStart(self.handle);
+	C.alcCaptureStart(self.handle)
 }
 
 func (self *CaptureDevice) CaptureStop() {
-	C.alcCaptureStop(self.handle);
+	C.alcCaptureStop(self.handle)
 }
 
 func (self *CaptureDevice) CaptureSamples(size uint32) (data []byte) {
-	data = make([]byte, size * self.sampleSize);
-	C.alcCaptureSamples(self.handle, unsafe.Pointer(&data[0]), C.ALCsizei(size));
-	return;
+	data = make([]byte, size*self.sampleSize)
+	C.alcCaptureSamples(self.handle, unsafe.Pointer(&data[0]), C.ALCsizei(size))
+	return
 }
 
 ///// Context ///////////////////////////////////////////////////////

@@ -89,6 +89,7 @@
 package al
 
 /*
+#cgo linux LDFLAGS: -lopenal
 #include <stdlib.h>
 #include <AL/al.h>
 #include "wrapper.h"
@@ -100,123 +101,123 @@ import "unsafe"
 // to disable distance attenuation. None can be used with Source.SetBuffer()
 // to clear a Source of buffers.
 const (
-	None = 0;
-	alFalse = 0;
-	alTrue = 1;
+	None    = 0
+	alFalse = 0
+	alTrue  = 1
 )
 
 // GetInteger() queries.
 const (
-	alDistanceModel = 0xD000;
+	alDistanceModel = 0xD000
 )
 
 // GetFloat() queries.
 const (
-	alDopplerFactor = 0xC000;
-	alDopplerVelocity = 0xC001;
-	alSpeedOfSound = 0xC003;
+	alDopplerFactor   = 0xC000
+	alDopplerVelocity = 0xC001
+	alSpeedOfSound    = 0xC003
 )
 
 // GetString() queries.
 const (
-	alVendor = 0xB001;
-	alVersion = 0xB002;
-	alRenderer = 0xB003;
-	alExtensions = 0xB004;
+	alVendor     = 0xB001
+	alVersion    = 0xB002
+	alRenderer   = 0xB003
+	alExtensions = 0xB004
 )
 
 // Shared Source/Listener properties.
 const (
-	alPosition = 0x1004;
-	alVelocity = 0x1006;
-	alGain = 0x100A;
+	alPosition = 0x1004
+	alVelocity = 0x1006
+	alGain     = 0x100A
 )
 
 func GetString(param int32) string {
-	return C.GoString(C.walGetString(C.ALenum(param)));
+	return C.GoString(C.walGetString(C.ALenum(param)))
 }
 
 func getBoolean(param int32) bool {
-	return C.alGetBoolean(C.ALenum(param)) != alFalse;
+	return C.alGetBoolean(C.ALenum(param)) != alFalse
 }
 
 func getInteger(param int32) int32 {
-	return int32(C.alGetInteger(C.ALenum(param)));
+	return int32(C.alGetInteger(C.ALenum(param)))
 }
 
 func getFloat(param int32) float32 {
-	return float32(C.alGetFloat(C.ALenum(param)));
+	return float32(C.alGetFloat(C.ALenum(param)))
 }
 
 func getDouble(param int32) float64 {
-	return float64(C.alGetDouble(C.ALenum(param)));
+	return float64(C.alGetDouble(C.ALenum(param)))
 }
 
 // Renamed, was GetBooleanv.
 func getBooleans(param int32, data []bool) {
-	C.walGetBooleanv(C.ALenum(param), unsafe.Pointer(&data[0]));
+	C.walGetBooleanv(C.ALenum(param), unsafe.Pointer(&data[0]))
 }
 
 // Renamed, was GetIntegerv.
 func getIntegers(param int32, data []int32) {
-	C.walGetIntegerv(C.ALenum(param), unsafe.Pointer(&data[0]));
+	C.walGetIntegerv(C.ALenum(param), unsafe.Pointer(&data[0]))
 }
 
 // Renamed, was GetFloatv.
 func getFloats(param int32, data []float32) {
-	C.walGetFloatv(C.ALenum(param), unsafe.Pointer(&data[0]));
+	C.walGetFloatv(C.ALenum(param), unsafe.Pointer(&data[0]))
 }
 
 // Renamed, was GetDoublev.
 func getDoubles(param int32, data []float64) {
-	C.walGetDoublev(C.ALenum(param), unsafe.Pointer(&data[0]));
+	C.walGetDoublev(C.ALenum(param), unsafe.Pointer(&data[0]))
 }
 
 // Error codes from GetError()/for GetString().
 const (
-	NoError = alFalse;
-	InvalidName = 0xA001;
-	InvalidEnum = 0xA002;
-	InvalidValue = 0xA003;
-	InvalidOperation = 0xA004;
+	NoError          = alFalse
+	InvalidName      = 0xA001
+	InvalidEnum      = 0xA002
+	InvalidValue     = 0xA003
+	InvalidOperation = 0xA004
 )
 
 // GetError() returns the most recent error generated
 // in the AL state machine.
 func GetError() uint32 {
-	return uint32(C.alGetError());
+	return uint32(C.alGetError())
 }
 
 // Renamed, was DopplerFactor.
-func SetDopplerFactor (value float32) {
-	C.alDopplerFactor(C.ALfloat(value));
+func SetDopplerFactor(value float32) {
+	C.alDopplerFactor(C.ALfloat(value))
 }
 
 // Renamed, was DopplerVelocity.
-func SetDopplerVelocity (value float32) {
-	C.alDopplerVelocity(C.ALfloat(value));
+func SetDopplerVelocity(value float32) {
+	C.alDopplerVelocity(C.ALfloat(value))
 }
 
 // Renamed, was SpeedOfSound.
-func SetSpeedOfSound (value float32) {
-	C.alSpeedOfSound(C.ALfloat(value));
+func SetSpeedOfSound(value float32) {
+	C.alSpeedOfSound(C.ALfloat(value))
 }
 
 // Distance models for SetDistanceModel() and GetDistanceModel().
 const (
-	InverseDistance = 0xD001;
-	InverseDistanceClamped = 0xD002;
-	LinearDistance = 0xD003;
-	LinearDistanceClamped = 0xD004;
-	ExponentDistance = 0xD005;
-	ExponentDistanceClamped = 0xD006;
+	InverseDistance         = 0xD001
+	InverseDistanceClamped  = 0xD002
+	LinearDistance          = 0xD003
+	LinearDistanceClamped   = 0xD004
+	ExponentDistance        = 0xD005
+	ExponentDistanceClamped = 0xD006
 )
 
 // SetDistanceModel() changes the current distance model.
 // Pass "None" to disable distance attenuation.
 // Renamed, was DistanceModel.
 func SetDistanceModel(model int32) {
-	C.alDistanceModel(C.ALenum(model));
+	C.alDistanceModel(C.ALenum(model))
 }
 
 ///// Crap ///////////////////////////////////////////////////////////
