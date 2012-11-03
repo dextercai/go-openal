@@ -63,11 +63,9 @@ func (self Listener) getf(param int32) float32 {
 }
 
 // Renamed, was GetListener3f.
-func (self Listener) get3f(param int32) (value1, value2, value3 float32) {
-	var v1, v2, v3 float32
+func (self Listener) get3f(param int32) (v1, v2, v3 float32) {
 	C.walGetListener3f(C.ALenum(param), unsafe.Pointer(&v1),
 		unsafe.Pointer(&v2), unsafe.Pointer(&v3))
-	value1, value2, value3 = v1, v2, v3
 	return
 }
 
@@ -83,11 +81,9 @@ func (self Listener) geti(param int32) int32 {
 }
 
 // Renamed, was GetListener3i.
-func (self Listener) get3i(param int32) (value1, value2, value3 int32) {
-	var v1, v2, v3 int32
+func (self Listener) get3i(param int32) (v1, v2, v3 int32) {
 	C.walGetListener3i(C.ALenum(param), unsafe.Pointer(&v1),
 		unsafe.Pointer(&v2), unsafe.Pointer(&v3))
-	value1, value2, value3 = v1, v2, v3
 	return
 }
 
@@ -109,52 +105,43 @@ func (self Listener) GetGain() (gain float32) {
 }
 
 // Convenience method, see Listener.Setfv().
-func (self Listener) SetPosition(vector Vector) {
+func (self Listener) SetPosition(vector *Vector) {
 	self.set3f(alPosition, vector.X, vector.Y, vector.Z)
 }
 
 // Convenience method, see Listener.Getfv().
-func (self Listener) GetPosition() Vector {
-	v := Vector{}
-	self.getfv(alPosition, v[0:])
-	return v
+func (self Listener) GetPosition(result *Vector) {
+	result.X, result.Y, result.Z = self.get3f(alPosition)
 }
 
 // Convenience method, see Listener.Setfv().
-func (self Listener) SetVelocity(vector Vector) {
-	self.setfv(alVelocity, vector[0:])
+func (self Listener) SetVelocity(vector *Vector) {
+	self.set3f(alVelocity, vector.X, vector.Y, vector.Z)
 }
 
 // Convenience method, see Listener.Getfv().
-func (self Listener) GetVelocity() Vector {
-	v := Vector{}
-	self.getfv(alVelocity, v[0:])
-	return v
+func (self Listener) GetVelocity(result *Vector) {
+	result.X, result.Y, result.Z = self.get3f(alVelocity)
 }
 
-// TODO: is there a better way to do this?
 // Convenience method, see Listener.Setfv().
-func (self Listener) SetOrientation(at Vector, up Vector) {
-	t := [6]float32{}
-	t[0] = at[0]
-	t[1] = at[1]
-	t[2] = at[2]
-	t[3] = up[0]
-	t[4] = up[1]
-	t[5] = up[2]
-	self.setfv(alOrientation, t[0:])
+func (self Listener) SetOrientation(at *Vector, up *Vector) {
+	tempSlice[0] = at.X
+	tempSlice[1] = at.Y
+	tempSlice[2] = at.Z
+	tempSlice[3] = up.X
+	tempSlice[4] = up.Y
+	tempSlice[5] = up.Z
+	self.setfv(alOrientation, tempSlice)
 }
 
-// TODO: is there a better way to do this?
 // Convenience method, see Listener.Getfv().
-func (self Listener) GetOrientation() (at Vector, up Vector) {
-	t := [6]float32{}
-	self.getfv(alOrientation, t[0:])
-	at[0] = t[0]
-	at[1] = t[1]
-	at[2] = t[2]
-	up[0] = t[3]
-	up[1] = t[4]
-	up[2] = t[5]
-	return
+func (self Listener) GetOrientation(resultAt, resultUp *Vector) {
+	self.getfv(alOrientation, tempSlice)
+	resultAt.X = tempSlice[0]
+	resultAt.Y = tempSlice[1]
+	resultAt.Z = tempSlice[2]
+	resultUp.X = tempSlice[3]
+	resultUp.Y = tempSlice[4]
+	resultUp.Z = tempSlice[5]
 }

@@ -333,39 +333,33 @@ func (self Source) SetSourceRelative(yes bool) {
 }
 
 // Convenience method, see Source.Setfv().
-func (self Source) SetPosition(vector Vector) {
-	self.setfv(alPosition, vector[0:])
+func (self Source) SetPosition(vector *Vector) {
+	self.set3f(alPosition, vector.X, vector.Y, vector.Z)
 }
 
 // Convenience method, see Source.Getfv().
-func (self Source) GetPosition() Vector {
-	v := Vector{}
-	self.getfv(alPosition, v[0:])
-	return v
+func (self Source) GetPosition(result *Vector) {
+	result.X, result.Y, result.Z = self.get3f(alPosition)
 }
 
 // Convenience method, see Source.Setfv().
-func (self Source) SetDirection(vector Vector) {
-	self.setfv(alDirection, vector[0:])
+func (self Source) SetDirection(vector *Vector) {
+	self.set3f(alDirection, vector.X, vector.Y, vector.Z)
 }
 
 // Convenience method, see Source.Getfv().
-func (self Source) GetDirection() Vector {
-	v := Vector{}
-	self.getfv(alDirection, v[0:])
-	return v
+func (self Source) GetDirection(result *Vector) {
+	result.X, result.Y, result.Z = self.get3f(alDirection)
 }
 
 // Convenience method, see Source.Setfv().
-func (self Source) SetVelocity(vector Vector) {
-	self.setfv(alVelocity, vector[0:])
+func (self Source) SetVelocity(vector *Vector) {
+	self.set3f(alVelocity, vector.X, vector.Y, vector.Z)
 }
 
 // Convenience method, see Source.Getfv().
-func (self Source) GetVelocity() Vector {
-	v := Vector{}
-	self.getfv(alVelocity, v[0:])
-	return v
+func (self Source) GetVelocity(result *Vector) {
+	result.X, result.Y, result.Z = self.get3f(alVelocity)
 }
 
 // Convenience method, see Source.Getf().

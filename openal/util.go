@@ -17,6 +17,14 @@ type Vector struct {
 	X, Y, Z float32
 }
 
+//It's much faster to use this slice as a temporary data holder,
+// than to redeclare it each time for the fv methods
+var tempSlice []float32
+
+func init() {
+	tempSlice = make([]float32, 6)
+}
+
 // Convenience function, see GetInteger().
 func GetDistanceModel() int32 {
 	return getInteger(alDistanceModel)
