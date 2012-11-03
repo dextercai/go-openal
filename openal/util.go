@@ -13,7 +13,9 @@
 package openal
 
 // Convenience type.
-type Vector [3]float32
+type Vector struct {
+	X, Y, Z float32
+}
 
 // Convenience function, see GetInteger().
 func GetDistanceModel() int32 {

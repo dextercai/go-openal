@@ -110,7 +110,7 @@ func (self Listener) GetGain() (gain float32) {
 
 // Convenience method, see Listener.Setfv().
 func (self Listener) SetPosition(vector Vector) {
-	self.setfv(alPosition, vector[0:])
+	self.set3f(alPosition, vector.X, vector.Y, vector.Z)
 }
 
 // Convenience method, see Listener.Getfv().
