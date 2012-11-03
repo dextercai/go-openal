@@ -10,7 +10,7 @@ func main() {
 	context := device.CreateContext()
 	context.Activate()
 
-	//listener := new(al.Listener)
+	//listener := new(openal.Listener)
 
 	source := openal.NewSource()
 	source.SetPitch(1)
