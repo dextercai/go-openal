@@ -12,7 +12,7 @@
 
 package openal
 
-// Convenience type.
+// Convenience Interface.
 type Vector struct {
 	X, Y, Z float32
 }

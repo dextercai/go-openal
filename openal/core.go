@@ -129,9 +129,9 @@ const (
 
 // Shared Source/Listener properties.
 const (
-	alPosition = 0x1004
-	alVelocity = 0x1006
-	alGain     = 0x100A
+	AlPosition = 0x1004
+	AlVelocity = 0x1006
+	AlGain     = 0x100A
 )
 
 func GetString(param int32) string {
