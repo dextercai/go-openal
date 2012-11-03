@@ -1,53 +1,14 @@
-Experimental OpenAL bindings for Go.
+OpenAL bindings for Go.
 ====================================
 
-Everything is evolving quickly and nothing is totally done.
-If you want to see what the C-level API will look like I'd
-recommend reading openal/al and not much else.
+I've forked this library from https://github.com/phf/go-openal 
+and have started changing it quite a bit from the original library.
 
-Even the C-level API *doesn't* follow the original API 100%
-and it's much cleaner as a result. If you are an old-timer,
-just relax and try to absorb it, you'll like it eventually.
+I don't have any experience with the original OpenAl libraries, so
+I'm going to be rearranging this a bit to fit my needs.  
 
-The top-level openal package is totally out of date, I only
-keep it around for reference while I refactor. Ignore it!
 
-Random Notes
-------------
+To install simply install the openal and alc libs appropriately for
+your platform, or build them from scratch, then run
 
-We can now play some sounds and theoretically we can also
-record something, but that's not tested yet. The code is
-a mess since I am still in the middle of learning OpenAL.
-
-I am trying to follow the ideas from my SQLite binding: a
-low-level core.go cgo API to wrap away the C-level stuff,
-and a more Go-like API on top of that.
-
-Actually, scratch that. I am now experimenting with a
-different approach, but I won't kill the stuff I did so
-far just yet: In the experiment, /pkg/openal will be the
-Go-level API while /pkg/openal/al[c|ut] will be exposed
-C-level APIs with minimal attempts at using Go the right
-way. I hope that this will allow hardcore hackers to go
-all the way to the bottom instead of being tied to what
-I think a Go-level API should look like. :-D
-
-I am finally done wrapping OpenAL's "al" API in a way
-that I am pretty happy with: all the functionality I can
-expose is now exposed. I decided that a 100% clone of
-the C API is just not good enough, even at a low level.
-But check it out for yourself. I think this rendition of
-OpenAL leads to much nicer code than the original C API
-while still staying close enough to be understandable
-for people with prior OpenAL experience.
-
-The plan now is to wrap the essential parts of "alc" and
-"alut" and then write some sensible demo application on
-top. I've wrapped all of "al" so people can see what the
-other ones will look like when they are done. But it's
-not really my priority to get them all the way done right
-now. Of course you're always welcome to help. :-D
-
-If you have any OpenAL experience, please help! Just email
-and we can get going. I have no OpenAL experience myself,
-so I need all the help I can get. :-D
+go get -u github.com/timshannon/go-openal/
