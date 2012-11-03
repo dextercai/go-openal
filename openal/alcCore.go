@@ -16,7 +16,7 @@
 // and Context to avoid problems with implicit assignments
 // in clients. It's sad because it makes the overhead a
 // lot higher, each of those calls triggers an allocation.
-package alc
+package openal
 
 //#cgo linux LDFLAGS: -lopenal
 //#include <stdlib.h>
@@ -42,21 +42,14 @@ ALCint walcGetInteger(ALCdevice *device, ALCenum param) {
 import "C"
 import "unsafe"
 
-import "github.com/timshannon/go-openal/al"
-
-const (
-	alcFalse = 0
-	alcTrue  = 1
-)
-
 // Error codes returned by Device.GetError().
 const (
-	NoError        = 0
+	//NoError        = 0
 	InvalidDevice  = 0xA001
 	InvalidContext = 0xA002
-	InvalidEnum    = 0xA003
-	InvalidValue   = 0xA004
-	OutOfMemory    = 0xA005
+	//InvalidEnum    = 0xA003
+	//InvalidValue   = 0xA004
+	OutOfMemory = 0xA005
 )
 
 const (
@@ -144,7 +137,7 @@ func CaptureOpenDevice(name string, freq uint32, format uint32, size uint32) *Ca
 	p := C.CString(name)
 	h := C.walcCaptureOpenDevice(p, C.ALCuint(freq), C.ALCenum(format), C.ALCsizei(size))
 	C.free(unsafe.Pointer(p))
-	s := map[uint32]uint32{al.FormatMono8: 1, al.FormatMono16: 2, al.FormatStereo8: 2, al.FormatStereo16: 4}[format]
+	s := map[uint32]uint32{FormatMono8: 1, FormatMono16: 2, FormatStereo8: 2, FormatStereo16: 4}[format]
 	return &CaptureDevice{Device{h}, s}
 }
 
@@ -189,7 +182,7 @@ var NullContext Context
 
 // Renamed, was MakeContextCurrent.
 func (self *Context) Activate() bool {
-	return C.alcMakeContextCurrent(self.handle) != alcFalse
+	return C.alcMakeContextCurrent(self.handle) != alFalse
 }
 
 // Renamed, was ProcessContext.

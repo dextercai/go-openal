@@ -87,7 +87,7 @@
 // anymore; it exposes everything (except stuff we can't
 // do) but I am not sure whether this is the right API for
 // the level we operate on. Not yet anyway. Anyone?
-package al
+package openal
 
 /*
 #cgo linux LDFLAGS: -lopenal

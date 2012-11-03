@@ -10,47 +10,47 @@
 // core.go due to language limitations. They should all be
 // here of course, at least conceptually.
 
-package al
+package openal
 
 // Convenience type.
-type Vector [3]float32;
+type Vector [3]float32
 
 // Convenience function, see GetInteger().
 func GetDistanceModel() int32 {
-	return getInteger(alDistanceModel);
+	return getInteger(alDistanceModel)
 }
 
 // Convenience function, see GetFloat().
 func GetDopplerFactor() float32 {
-	return getFloat(alDopplerFactor);
+	return getFloat(alDopplerFactor)
 }
 
 // Convenience function, see GetFloat().
 func GetDopplerVelocity() float32 {
-	return getFloat(alDopplerVelocity);
+	return getFloat(alDopplerVelocity)
 }
 
 // Convenience function, see GetFloat().
 func GetSpeedOfSound() float32 {
-	return getFloat(alSpeedOfSound);
+	return getFloat(alSpeedOfSound)
 }
 
 // Convenience function, see GetString().
 func GetVendor() string {
-	return GetString(alVendor);
+	return GetString(alVendor)
 }
 
 // Convenience function, see GetString().
 func GetVersion() string {
-	return GetString(alVersion);
+	return GetString(alVersion)
 }
 
 // Convenience function, see GetString().
 func GetRenderer() string {
-	return GetString(alRenderer);
+	return GetString(alRenderer)
 }
 
 // Convenience function, see GetString().
 func GetExtensions() string {
-	return GetString(alExtensions);
+	return GetString(alExtensions)
 }
