@@ -330,32 +330,32 @@ func (self Source) SetSourceRelative(yes bool) {
 
 // Convenience method, see Source.Setfv().
 func (self Source) SetPosition(vector *Vector) {
-	self.Set3f(AlPosition, vector.X, vector.Y, vector.Z)
+	self.Set3f(AlPosition, vector[x], vector[y], vector[z])
 }
 
 // Convenience method, see Source.Getfv().
 func (self Source) GetPosition(result *Vector) {
-	result.X, result.Y, result.Z = self.Get3f(AlPosition)
+	result[x], result[y], result[z] = self.Get3f(AlPosition)
 }
 
 // Convenience method, see Source.Setfv().
 func (self Source) SetDirection(vector *Vector) {
-	self.Set3f(AlDirection, vector.X, vector.Y, vector.Z)
+	self.Set3f(AlDirection, vector[x], vector[y], vector[z])
 }
 
 // Convenience method, see Source.Getfv().
 func (self Source) GetDirection(result *Vector) {
-	result.X, result.Y, result.Z = self.Get3f(AlDirection)
+	result[x], result[y], result[z] = self.Get3f(AlDirection)
 }
 
 // Convenience method, see Source.Setfv().
 func (self Source) SetVelocity(vector *Vector) {
-	self.Set3f(AlVelocity, vector.X, vector.Y, vector.Z)
+	self.Set3f(AlVelocity, vector[x], vector[y], vector[z])
 }
 
 // Convenience method, see Source.Getfv().
 func (self Source) GetVelocity(result *Vector) {
-	result.X, result.Y, result.Z = self.Get3f(AlVelocity)
+	result[x], result[y], result[z] = self.Get3f(AlVelocity)
 }
 
 // Convenience method, see Source.Getf().

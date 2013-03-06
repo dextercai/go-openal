@@ -13,17 +13,15 @@
 package openal
 
 // Convenience Interface.
-type Vector struct {
-	X, Y, Z float32
-}
+type Vector [3]float32
 
-//It's much faster to use this slice as a temporary data holder,
-// than to redeclare it each time for the fv methods
-var tempSlice []float32
+var tempSlice = make([]float32, 6)
+const (
+	x = iota
+	y
+	z
+)
 
-func init() {
-	tempSlice = make([]float32, 6)
-}
 
 // Convenience function, see GetInteger().
 func GetDistanceModel() int32 {

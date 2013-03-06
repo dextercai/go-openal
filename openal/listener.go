@@ -106,42 +106,42 @@ func (self Listener) GetGain() (gain float32) {
 
 // Convenience method, see Listener.Setfv().
 func (self Listener) SetPosition(vector *Vector) {
-	self.Set3f(AlPosition, vector.X, vector.Y, vector.Z)
+	self.Set3f(AlPosition, vector[x], vector[y], vector[z])
 }
 
 // Convenience method, see Listener.Getfv().
 func (self Listener) GetPosition(result *Vector) {
-	result.X, result.Y, result.Z = self.Get3f(AlPosition)
+	result[x], result[y], result[z] = self.Get3f(AlPosition)
 }
 
 // Convenience method, see Listener.Setfv().
 func (self Listener) SetVelocity(vector *Vector) {
-	self.Set3f(AlVelocity, vector.X, vector.Y, vector.Z)
+	self.Set3f(AlVelocity, vector[x], vector[y], vector[z])
 }
 
 // Convenience method, see Listener.Getfv().
 func (self Listener) GetVelocity(result *Vector) {
-	result.X, result.Y, result.Z = self.Get3f(AlVelocity)
+	result[x], result[y], result[z] = self.Get3f(AlVelocity)
 }
 
 // Convenience method, see Listener.Setfv().
 func (self Listener) SetOrientation(at *Vector, up *Vector) {
-	tempSlice[0] = at.X
-	tempSlice[1] = at.Y
-	tempSlice[2] = at.Z
-	tempSlice[3] = up.X
-	tempSlice[4] = up.Y
-	tempSlice[5] = up.Z
+	tempSlice[0] = at[x]
+	tempSlice[1] = at[y]
+	tempSlice[2] = at[z]
+	tempSlice[3] = up[x]
+	tempSlice[4] = up[y]
+	tempSlice[5] = up[z]
 	self.Setfv(AlOrientation, tempSlice)
 }
 
 // Convenience method, see Listener.Getfv().
 func (self Listener) GetOrientation(resultAt, resultUp *Vector) {
 	self.Getfv(AlOrientation, tempSlice)
-	resultAt.X = tempSlice[0]
-	resultAt.Y = tempSlice[1]
-	resultAt.Z = tempSlice[2]
-	resultUp.X = tempSlice[3]
-	resultUp.Y = tempSlice[4]
-	resultUp.Z = tempSlice[5]
+	resultAt[x] = tempSlice[0]
+	resultAt[y] = tempSlice[1]
+	resultAt[z] = tempSlice[2]
+	resultUp[x] = tempSlice[3]
+	resultUp[y] = tempSlice[4]
+	resultUp[z] = tempSlice[5]
 }

@@ -13,12 +13,12 @@ func main() {
 	//listener := new(al.Listener)
 
 	source := openal.NewSource()
-	source.SetPitch(1)
-	source.SetGain(1)
-	position := &openal.Vector{0, 0, 0}
-	velocity := &openal.Vector{0, 0, 0}
-	source.SetPosition(position)
-	source.SetVelocity(velocity)
+	//source.SetPitch(1)
+	//source.SetGain(1)
+	//position := &openal.Vector{0, 0, 0}
+	//velocity := &openal.Vector{0, 0, 0}
+	//source.SetPosition(position)
+	//source.SetVelocity(velocity)
 	source.SetLooping(false)
 
 	buffer := openal.NewBuffer()
