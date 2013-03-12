@@ -1,4 +1,4 @@
-#ifdef __APPLE__ && __MACH__
+#ifdef __APPLE__
 #include<OpenAL/al.h>
 #include<OpenAL/alc.h>
 #else
