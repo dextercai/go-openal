@@ -176,18 +176,9 @@ func getDoubles(param int32, data []float64) {
 	C.walGetDoublev(C.ALenum(param), unsafe.Pointer(&data[0]))
 }
 
-// Error codes from GetError()/for GetString().
-const (
-	NoError          = alFalse
-	InvalidName      = 0xA001
-	InvalidEnum      = 0xA002
-	InvalidValue     = 0xA003
-	InvalidOperation = 0xA004
-)
-
 // GetError() returns the most recent error generated
 // in the AL state machine.
-func GetError() uint32 {
+func getError() uint32 {
 	return uint32(C.alGetError())
 }
 

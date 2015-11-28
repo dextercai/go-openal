@@ -42,16 +42,6 @@ ALCint walcGetInteger(ALCdevice *device, ALCenum param) {
 import "C"
 import "unsafe"
 
-// Error codes returned by Device.GetError().
-const (
-	//NoError        = 0
-	InvalidDevice  = 0xA001
-	InvalidContext = 0xA002
-	//InvalidEnum    = 0xA003
-	//InvalidValue   = 0xA004
-	OutOfMemory = 0xA005
-)
-
 const (
 	Frequency     = 0x1007 // int Hz
 	Refresh       = 0x1008 // int Hz
@@ -90,10 +80,29 @@ type Device struct {
 	handle *C.ALCdevice
 }
 
-// GetError() returns the most recent error generated
-// in the AL state machine.
-func (self *Device) GetError() uint32 {
+func (self *Device) getError() uint32 {
 	return uint32(C.alcGetError(self.handle))
+}
+
+// Err() returns the most recent error generated
+// in the AL state machine.
+func (self *Device) Err() error {
+	switch code := self.getError(); code {
+	case 0x0000:
+		return nil
+	case 0xA001:
+		return ErrInvalidDevice
+	case 0xA002:
+		return ErrInvalidContext
+	case 0xA003:
+		return ErrInvalidEnum
+	case 0xA004:
+		return ErrInvalidValue
+	case 0xA005:
+		return ErrOutOfMemory
+	default:
+		return ErrorCode(code)
+	}
 }
 
 func OpenDevice(name string) *Device {
