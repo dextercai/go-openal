@@ -11,14 +11,34 @@ package openal
 #include "wrapper.h"
 */
 import "C"
-import "unsafe"
+import (
+	"fmt"
+	"unsafe"
+)
+
+type State int32
+
+func (s State) String() string {
+	switch s {
+	case Initial:
+		return "Initial"
+	case Playing:
+		return "Playing"
+	case Paused:
+		return "Paused"
+	case Stopped:
+		return "Stopped"
+	default:
+		return fmt.Sprintf("%x", int32(s))
+	}
+}
 
 // Results from Source.State() query.
 const (
-	Initial = 0x1011
-	Playing = 0x1012
-	Paused  = 0x1013
-	Stopped = 0x1014
+	Initial State = 0x1011
+	Playing State = 0x1012
+	Paused  State = 0x1013
+	Stopped State = 0x1014
 )
 
 // Results from Source.Type() query.
@@ -228,8 +248,8 @@ func (self Source) BuffersProcessed() int32 {
 }
 
 // Convenience method, see Source.Geti().
-func (self Source) State() int32 {
-	return self.Geti(AlSourceState)
+func (self Source) State() State {
+	return State(self.Geti(AlSourceState))
 }
 
 // Convenience method, see Source.Geti().
