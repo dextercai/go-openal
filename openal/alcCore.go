@@ -146,8 +146,7 @@ func CaptureOpenDevice(name string, freq uint32, format Format, size uint32) *Ca
 	p := C.CString(name)
 	h := C.walcCaptureOpenDevice(p, C.ALCuint(freq), C.ALCenum(format), C.ALCsizei(size))
 	C.free(unsafe.Pointer(p))
-	s := map[Format]uint32{FormatMono8: 1, FormatMono16: 2, FormatStereo8: 2, FormatStereo16: 4}[format]
-	return &CaptureDevice{Device{h}, s}
+	return &CaptureDevice{Device{h}, uint32(format.SampleSize())}
 }
 
 // XXX: Override Device.CloseDevice to make sure the correct

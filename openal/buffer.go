@@ -111,6 +111,21 @@ func (self Buffer) getiv(param int32, values []int32) {
 
 type Format uint32
 
+func (f Format) SampleSize() int {
+	switch f {
+	case FormatMono8:
+		return 1
+	case FormatMono16:
+		return 2
+	case FormatStereo8:
+		return 2
+	case FormatStereo16:
+		return 4
+	default:
+		return 1
+	}
+}
+
 // Format of sound samples passed to Buffer.SetData().
 const (
 	FormatMono8    Format = 0x1100

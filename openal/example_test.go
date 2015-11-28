@@ -47,7 +47,7 @@ func ExamplePlay() {
 func ExampleMonitor() {
 	const (
 		frequency    = 44100
-		format       = openal.FormatMono16
+		format       = openal.FormatStereo16
 		captureSize  = 512
 		buffersCount = 10
 	)
@@ -67,7 +67,7 @@ func ExampleMonitor() {
 	defer source.Stop()
 
 	buffers := openal.NewBuffers(buffersCount)
-	samples := make([]byte, captureSize)
+	samples := make([]byte, captureSize*format.SampleSize())
 
 	start := time.Now()
 	for time.Since(start) < time.Second { // play for 1 second
