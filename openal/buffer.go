@@ -107,12 +107,14 @@ func (self Buffer) getiv(param int32, values []int32) {
 	C.walGetBufferiv(C.ALuint(self), C.ALenum(param), unsafe.Pointer(&values[0]))
 }
 
+type Format uint32
+
 // Format of sound samples passed to Buffer.SetData().
 const (
-	FormatMono8    = 0x1100
-	FormatMono16   = 0x1101
-	FormatStereo8  = 0x1102
-	FormatStereo16 = 0x1103
+	FormatMono8    Format = 0x1100
+	FormatMono16   Format = 0x1101
+	FormatStereo8  Format = 0x1102
+	FormatStereo16 Format = 0x1103
 )
 
 // SetData() specifies the sample data the buffer should use.
@@ -121,7 +123,7 @@ const (
 // must be a multiple of four bytes long. The frequency is given
 // in Hz.
 // Renamed, was BufferData.
-func (self Buffer) SetData(format int32, data []byte, frequency int32) {
+func (self Buffer) SetData(format Format, data []byte, frequency int32) {
 	C.alBufferData(C.ALuint(self), C.ALenum(format), unsafe.Pointer(&data[0]),
 		C.ALsizei(len(data)), C.ALsizei(frequency))
 }

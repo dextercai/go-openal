@@ -131,13 +131,13 @@ type CaptureDevice struct {
 	sampleSize uint32
 }
 
-func CaptureOpenDevice(name string, freq uint32, format uint32, size uint32) *CaptureDevice {
+func CaptureOpenDevice(name string, freq uint32, format Format, size uint32) *CaptureDevice {
 	// TODO: turn empty string into nil?
 	// TODO: what about an error return?
 	p := C.CString(name)
 	h := C.walcCaptureOpenDevice(p, C.ALCuint(freq), C.ALCenum(format), C.ALCsizei(size))
 	C.free(unsafe.Pointer(p))
-	s := map[uint32]uint32{FormatMono8: 1, FormatMono16: 2, FormatStereo8: 2, FormatStereo16: 4}[format]
+	s := map[Format]uint32{FormatMono8: 1, FormatMono16: 2, FormatStereo8: 2, FormatStereo16: 4}[format]
 	return &CaptureDevice{Device{h}, s}
 }
 
