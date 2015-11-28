@@ -12,16 +12,18 @@
 
 package openal
 
+import "strings"
+
 // Convenience Interface.
 type Vector [3]float32
 
 var tempSlice = make([]float32, 6)
+
 const (
 	x = iota
 	y
 	z
 )
-
 
 // Convenience function, see GetInteger().
 func GetDistanceModel() int32 {
@@ -61,4 +63,12 @@ func GetRenderer() string {
 // Convenience function, see GetString().
 func GetExtensions() string {
 	return GetString(alExtensions)
+}
+
+func GetExtensionsSlice() []string {
+	return strings.Split(GetExtensions(), " ")
+}
+
+func IsExtensionPresent(ext string) bool {
+	return strings.Index(GetExtensions(), ext) >= 0
 }
