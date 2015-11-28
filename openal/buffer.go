@@ -24,18 +24,20 @@ const (
 	alSize      = 0x2004
 )
 
+type Buffers []Buffer
+
 // NewBuffers() creates n fresh buffers.
 // Renamed, was GenBuffers.
-func NewBuffers(n int) (buffers []Buffer) {
-	buffers = make([]Buffer, n)
+func NewBuffers(n int) (buffers Buffers) {
+	buffers = make(Buffers, n)
 	C.walGenBuffers(C.ALsizei(n), unsafe.Pointer(&buffers[0]))
 	return
 }
 
-// DeleteBuffers() deletes the given buffers.
-func DeleteBuffers(buffers []Buffer) {
-	n := len(buffers)
-	C.walDeleteBuffers(C.ALsizei(n), unsafe.Pointer(&buffers[0]))
+// Delete() deletes the given buffers.
+func (self Buffers) Delete() {
+	n := len(self)
+	C.walDeleteBuffers(C.ALsizei(n), unsafe.Pointer(&self[0]))
 }
 
 // Renamed, was Bufferf.
@@ -134,10 +136,10 @@ func NewBuffer() Buffer {
 	return Buffer(C.walGenBuffer())
 }
 
-// DeleteBuffer() deletes a single buffer.
+// Delete() deletes a single buffer.
 // Convenience function, see DeleteBuffers().
-func DeleteBuffer(buffer Buffer) {
-	C.walDeleteSource(C.ALuint(buffer))
+func (self Buffer) Delete() {
+	C.walDeleteSource(C.ALuint(self))
 }
 
 // GetFrequency() returns the frequency, in Hz, of the buffer's sample data.
