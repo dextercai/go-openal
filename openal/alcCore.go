@@ -169,10 +169,44 @@ func (self *CaptureDevice) CaptureStop() {
 	C.alcCaptureStop(self.handle)
 }
 
+func (self *CaptureDevice) CaptureTo(data []byte) {
+	C.alcCaptureSamples(self.handle, unsafe.Pointer(&data[0]), C.ALCsizei(uint32(len(data))/self.sampleSize))
+}
+
+func (self *CaptureDevice) CaptureToInt16(data []int16) {
+	C.alcCaptureSamples(self.handle, unsafe.Pointer(&data[0]), C.ALCsizei(uint32(len(data))*2/self.sampleSize))
+}
+
+func (self *CaptureDevice) CaptureMono8To(data []byte) {
+	self.CaptureTo(data)
+}
+
+func (self *CaptureDevice) CaptureMono16To(data []int16) {
+	self.CaptureToInt16(data)
+}
+
+func (self *CaptureDevice) CaptureStereo8To(data [][2]byte) {
+	C.alcCaptureSamples(self.handle, unsafe.Pointer(&data[0]), C.ALCsizei(uint32(len(data))*2/self.sampleSize))
+}
+
+func (self *CaptureDevice) CaptureStereo16To(data [][2]int16) {
+	C.alcCaptureSamples(self.handle, unsafe.Pointer(&data[0]), C.ALCsizei(uint32(len(data))*4/self.sampleSize))
+}
+
 func (self *CaptureDevice) CaptureSamples(size uint32) (data []byte) {
 	data = make([]byte, size*self.sampleSize)
-	C.alcCaptureSamples(self.handle, unsafe.Pointer(&data[0]), C.ALCsizei(size))
+	self.CaptureTo(data)
 	return
+}
+
+func (self *CaptureDevice) CaptureSamplesInt16(size uint32) (data []int16) {
+	data = make([]int16, size*self.sampleSize/2)
+	self.CaptureToInt16(data)
+	return
+}
+
+func (self *CaptureDevice) CapturedSamples() (size uint32) {
+	return uint32(self.GetInteger(CaptureSamples))
 }
 
 ///// Context ///////////////////////////////////////////////////////

@@ -130,6 +130,31 @@ func (self Buffer) SetData(format Format, data []byte, frequency int32) {
 		C.ALsizei(len(data)), C.ALsizei(frequency))
 }
 
+func (self Buffer) SetDataInt16(format Format, data []int16, frequency int32) {
+	C.alBufferData(C.ALuint(self), C.ALenum(format), unsafe.Pointer(&data[0]),
+		C.ALsizei(len(data)*2), C.ALsizei(frequency))
+}
+
+func (self Buffer) SetDataMono8(data []byte, frequency int32) {
+	C.alBufferData(C.ALuint(self), C.ALenum(FormatMono8), unsafe.Pointer(&data[0]),
+		C.ALsizei(len(data)), C.ALsizei(frequency))
+}
+
+func (self Buffer) SetDataMono16(data []int16, frequency int32) {
+	C.alBufferData(C.ALuint(self), C.ALenum(FormatMono16), unsafe.Pointer(&data[0]),
+		C.ALsizei(len(data)*2), C.ALsizei(frequency))
+}
+
+func (self Buffer) SetDataStereo8(data [][2]byte, frequency int32) {
+	C.alBufferData(C.ALuint(self), C.ALenum(FormatStereo8), unsafe.Pointer(&data[0]),
+		C.ALsizei(len(data)*2), C.ALsizei(frequency))
+}
+
+func (self Buffer) SetDataStereo16(data [][2]int16, frequency int32) {
+	C.alBufferData(C.ALuint(self), C.ALenum(FormatStereo16), unsafe.Pointer(&data[0]),
+		C.ALsizei(len(data)*4), C.ALsizei(frequency))
+}
+
 // NewBuffer() creates a single buffer.
 // Convenience function, see NewBuffers().
 func NewBuffer() Buffer {
