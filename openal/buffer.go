@@ -24,18 +24,20 @@ const (
 	alSize      = 0x2004
 )
 
+type Buffers []Buffer
+
 // NewBuffers() creates n fresh buffers.
 // Renamed, was GenBuffers.
-func NewBuffers(n int) (buffers []Buffer) {
-	buffers = make([]Buffer, n)
+func NewBuffers(n int) (buffers Buffers) {
+	buffers = make(Buffers, n)
 	C.walGenBuffers(C.ALsizei(n), unsafe.Pointer(&buffers[0]))
 	return
 }
 
-// DeleteBuffers() deletes the given buffers.
-func DeleteBuffers(buffers []Buffer) {
-	n := len(buffers)
-	C.walDeleteBuffers(C.ALsizei(n), unsafe.Pointer(&buffers[0]))
+// Delete() deletes the given buffers.
+func (self Buffers) Delete() {
+	n := len(self)
+	C.walDeleteBuffers(C.ALsizei(n), unsafe.Pointer(&self[0]))
 }
 
 // Renamed, was Bufferf.
@@ -107,12 +109,29 @@ func (self Buffer) getiv(param int32, values []int32) {
 	C.walGetBufferiv(C.ALuint(self), C.ALenum(param), unsafe.Pointer(&values[0]))
 }
 
+type Format uint32
+
+func (f Format) SampleSize() int {
+	switch f {
+	case FormatMono8:
+		return 1
+	case FormatMono16:
+		return 2
+	case FormatStereo8:
+		return 2
+	case FormatStereo16:
+		return 4
+	default:
+		return 1
+	}
+}
+
 // Format of sound samples passed to Buffer.SetData().
 const (
-	FormatMono8    = 0x1100
-	FormatMono16   = 0x1101
-	FormatStereo8  = 0x1102
-	FormatStereo16 = 0x1103
+	FormatMono8    Format = 0x1100
+	FormatMono16   Format = 0x1101
+	FormatStereo8  Format = 0x1102
+	FormatStereo16 Format = 0x1103
 )
 
 // SetData() specifies the sample data the buffer should use.
@@ -121,9 +140,34 @@ const (
 // must be a multiple of four bytes long. The frequency is given
 // in Hz.
 // Renamed, was BufferData.
-func (self Buffer) SetData(format int32, data []byte, frequency int32) {
+func (self Buffer) SetData(format Format, data []byte, frequency int32) {
 	C.alBufferData(C.ALuint(self), C.ALenum(format), unsafe.Pointer(&data[0]),
 		C.ALsizei(len(data)), C.ALsizei(frequency))
+}
+
+func (self Buffer) SetDataInt16(format Format, data []int16, frequency int32) {
+	C.alBufferData(C.ALuint(self), C.ALenum(format), unsafe.Pointer(&data[0]),
+		C.ALsizei(len(data)*2), C.ALsizei(frequency))
+}
+
+func (self Buffer) SetDataMono8(data []byte, frequency int32) {
+	C.alBufferData(C.ALuint(self), C.ALenum(FormatMono8), unsafe.Pointer(&data[0]),
+		C.ALsizei(len(data)), C.ALsizei(frequency))
+}
+
+func (self Buffer) SetDataMono16(data []int16, frequency int32) {
+	C.alBufferData(C.ALuint(self), C.ALenum(FormatMono16), unsafe.Pointer(&data[0]),
+		C.ALsizei(len(data)*2), C.ALsizei(frequency))
+}
+
+func (self Buffer) SetDataStereo8(data [][2]byte, frequency int32) {
+	C.alBufferData(C.ALuint(self), C.ALenum(FormatStereo8), unsafe.Pointer(&data[0]),
+		C.ALsizei(len(data)*2), C.ALsizei(frequency))
+}
+
+func (self Buffer) SetDataStereo16(data [][2]int16, frequency int32) {
+	C.alBufferData(C.ALuint(self), C.ALenum(FormatStereo16), unsafe.Pointer(&data[0]),
+		C.ALsizei(len(data)*4), C.ALsizei(frequency))
 }
 
 // NewBuffer() creates a single buffer.
@@ -132,10 +176,10 @@ func NewBuffer() Buffer {
 	return Buffer(C.walGenBuffer())
 }
 
-// DeleteBuffer() deletes a single buffer.
+// Delete() deletes a single buffer.
 // Convenience function, see DeleteBuffers().
-func DeleteBuffer(buffer Buffer) {
-	C.walDeleteSource(C.ALuint(buffer))
+func (self Buffer) Delete() {
+	C.walDeleteSource(C.ALuint(self))
 }
 
 // GetFrequency() returns the frequency, in Hz, of the buffer's sample data.

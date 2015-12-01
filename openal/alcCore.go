@@ -42,16 +42,6 @@ ALCint walcGetInteger(ALCdevice *device, ALCenum param) {
 import "C"
 import "unsafe"
 
-// Error codes returned by Device.GetError().
-const (
-	//NoError        = 0
-	InvalidDevice  = 0xA001
-	InvalidContext = 0xA002
-	//InvalidEnum    = 0xA003
-	//InvalidValue   = 0xA004
-	OutOfMemory = 0xA005
-)
-
 const (
 	Frequency     = 0x1007 // int Hz
 	Refresh       = 0x1008 // int Hz
@@ -90,10 +80,29 @@ type Device struct {
 	handle *C.ALCdevice
 }
 
-// GetError() returns the most recent error generated
-// in the AL state machine.
-func (self *Device) GetError() uint32 {
+func (self *Device) getError() uint32 {
 	return uint32(C.alcGetError(self.handle))
+}
+
+// Err() returns the most recent error generated
+// in the AL state machine.
+func (self *Device) Err() error {
+	switch code := self.getError(); code {
+	case 0x0000:
+		return nil
+	case 0xA001:
+		return ErrInvalidDevice
+	case 0xA002:
+		return ErrInvalidContext
+	case 0xA003:
+		return ErrInvalidEnum
+	case 0xA004:
+		return ErrInvalidValue
+	case 0xA005:
+		return ErrOutOfMemory
+	default:
+		return ErrorCode(code)
+	}
 }
 
 func OpenDevice(name string) *Device {
@@ -131,14 +140,13 @@ type CaptureDevice struct {
 	sampleSize uint32
 }
 
-func CaptureOpenDevice(name string, freq uint32, format uint32, size uint32) *CaptureDevice {
+func CaptureOpenDevice(name string, freq uint32, format Format, size uint32) *CaptureDevice {
 	// TODO: turn empty string into nil?
 	// TODO: what about an error return?
 	p := C.CString(name)
 	h := C.walcCaptureOpenDevice(p, C.ALCuint(freq), C.ALCenum(format), C.ALCsizei(size))
 	C.free(unsafe.Pointer(p))
-	s := map[uint32]uint32{FormatMono8: 1, FormatMono16: 2, FormatStereo8: 2, FormatStereo16: 4}[format]
-	return &CaptureDevice{Device{h}, s}
+	return &CaptureDevice{Device{h}, uint32(format.SampleSize())}
 }
 
 // XXX: Override Device.CloseDevice to make sure the correct
@@ -160,10 +168,44 @@ func (self *CaptureDevice) CaptureStop() {
 	C.alcCaptureStop(self.handle)
 }
 
+func (self *CaptureDevice) CaptureTo(data []byte) {
+	C.alcCaptureSamples(self.handle, unsafe.Pointer(&data[0]), C.ALCsizei(uint32(len(data))/self.sampleSize))
+}
+
+func (self *CaptureDevice) CaptureToInt16(data []int16) {
+	C.alcCaptureSamples(self.handle, unsafe.Pointer(&data[0]), C.ALCsizei(uint32(len(data))*2/self.sampleSize))
+}
+
+func (self *CaptureDevice) CaptureMono8To(data []byte) {
+	self.CaptureTo(data)
+}
+
+func (self *CaptureDevice) CaptureMono16To(data []int16) {
+	self.CaptureToInt16(data)
+}
+
+func (self *CaptureDevice) CaptureStereo8To(data [][2]byte) {
+	C.alcCaptureSamples(self.handle, unsafe.Pointer(&data[0]), C.ALCsizei(uint32(len(data))*2/self.sampleSize))
+}
+
+func (self *CaptureDevice) CaptureStereo16To(data [][2]int16) {
+	C.alcCaptureSamples(self.handle, unsafe.Pointer(&data[0]), C.ALCsizei(uint32(len(data))*4/self.sampleSize))
+}
+
 func (self *CaptureDevice) CaptureSamples(size uint32) (data []byte) {
 	data = make([]byte, size*self.sampleSize)
-	C.alcCaptureSamples(self.handle, unsafe.Pointer(&data[0]), C.ALCsizei(size))
+	self.CaptureTo(data)
 	return
+}
+
+func (self *CaptureDevice) CaptureSamplesInt16(size uint32) (data []int16) {
+	data = make([]int16, size*self.sampleSize/2)
+	self.CaptureToInt16(data)
+	return
+}
+
+func (self *CaptureDevice) CapturedSamples() (size uint32) {
+	return uint32(self.GetInteger(CaptureSamples))
 }
 
 ///// Context ///////////////////////////////////////////////////////
