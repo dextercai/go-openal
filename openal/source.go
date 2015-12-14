@@ -201,12 +201,12 @@ func (self Source) Pause() {
 }
 
 // Renamed, was SourceQueueBuffers.
-func (self Source) QueueBuffers(buffers []Buffer) {
+func (self Source) QueueBuffers(buffers Buffers) {
 	C.walSourceQueueBuffers(C.ALuint(self), C.ALsizei(len(buffers)), unsafe.Pointer(&buffers[0]))
 }
 
 // Renamed, was SourceUnqueueBuffers.
-func (self Source) UnqueueBuffers(buffers []Buffer) {
+func (self Source) UnqueueBuffers(buffers Buffers) {
 	C.walSourceUnqueueBuffers(C.ALuint(self), C.ALsizei(len(buffers)), unsafe.Pointer(&buffers[0]))
 }
 
