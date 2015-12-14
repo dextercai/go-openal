@@ -74,38 +74,40 @@ const (
 // Sources represent sound emitters in 3d space.
 type Source uint32
 
+type Sources []Source
+
 // NewSources() creates n sources.
 // Renamed, was GenSources.
-func NewSources(n int) (sources []Source) {
-	sources = make([]Source, n)
+func NewSources(n int) (sources Sources) {
+	sources = make(Sources, n)
 	C.walGenSources(C.ALsizei(n), unsafe.Pointer(&sources[0]))
 	return
 }
 
-// DeleteSources() deletes the given sources.
-func DeleteSources(sources []Source) {
-	n := len(sources)
-	C.walDeleteSources(C.ALsizei(n), unsafe.Pointer(&sources[0]))
+// Delete deletes the sources.
+func (self Sources) Delete() {
+	n := len(self)
+	C.walDeleteSources(C.ALsizei(n), unsafe.Pointer(&self[0]))
 }
 
 // Renamed, was SourcePlayv.
-func PlaySources(sources []Source) {
-	C.walSourcePlayv(C.ALsizei(len(sources)), unsafe.Pointer(&sources[0]))
+func (self Sources) Play() {
+	C.walSourcePlayv(C.ALsizei(len(self)), unsafe.Pointer(&self[0]))
 }
 
 // Renamed, was SourceStopv.
-func StopSources(sources []Source) {
-	C.walSourceStopv(C.ALsizei(len(sources)), unsafe.Pointer(&sources[0]))
+func (self Sources) Stop() {
+	C.walSourceStopv(C.ALsizei(len(self)), unsafe.Pointer(&self[0]))
 }
 
 // Renamed, was SourceRewindv.
-func RewindSources(sources []Source) {
-	C.walSourceRewindv(C.ALsizei(len(sources)), unsafe.Pointer(&sources[0]))
+func (self Sources) Rewind() {
+	C.walSourceRewindv(C.ALsizei(len(self)), unsafe.Pointer(&self[0]))
 }
 
 // Renamed, was SourcePausev.
-func PauseSources(sources []Source) {
-	C.walSourcePausev(C.ALsizei(len(sources)), unsafe.Pointer(&sources[0]))
+func (self Sources) Pause() {
+	C.walSourcePausev(C.ALsizei(len(self)), unsafe.Pointer(&self[0]))
 }
 
 // Renamed, was Sourcef.
@@ -172,6 +174,12 @@ func (self Source) Getiv(param int32, values []int32) {
 	C.walGetSourceiv(C.ALuint(self), C.ALenum(param), unsafe.Pointer(&values[0]))
 }
 
+// Delete deletes the source.
+// Convenience function, see DeleteSources().
+func (self Source) Delete() {
+	C.walDeleteSource(C.ALuint(self))
+}
+
 // Renamed, was SourcePlay.
 func (self Source) Play() {
 	C.alSourcePlay(C.ALuint(self))
@@ -193,12 +201,12 @@ func (self Source) Pause() {
 }
 
 // Renamed, was SourceQueueBuffers.
-func (self Source) QueueBuffers(buffers []Buffer) {
+func (self Source) QueueBuffers(buffers Buffers) {
 	C.walSourceQueueBuffers(C.ALuint(self), C.ALsizei(len(buffers)), unsafe.Pointer(&buffers[0]))
 }
 
 // Renamed, was SourceUnqueueBuffers.
-func (self Source) UnqueueBuffers(buffers []Buffer) {
+func (self Source) UnqueueBuffers(buffers Buffers) {
 	C.walSourceUnqueueBuffers(C.ALuint(self), C.ALsizei(len(buffers)), unsafe.Pointer(&buffers[0]))
 }
 
@@ -208,12 +216,6 @@ func (self Source) UnqueueBuffers(buffers []Buffer) {
 // Convenience function, see NewSources().
 func NewSource() Source {
 	return Source(C.walGenSource())
-}
-
-// DeleteSource() deletes a single source.
-// Convenience function, see DeleteSources().
-func DeleteSource(source Source) {
-	C.walDeleteSource(C.ALuint(source))
 }
 
 // Convenience method, see Source.QueueBuffers().
