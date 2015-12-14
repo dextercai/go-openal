@@ -74,38 +74,40 @@ const (
 // Sources represent sound emitters in 3d space.
 type Source uint32
 
+type Sources []Source
+
 // NewSources() creates n sources.
 // Renamed, was GenSources.
-func NewSources(n int) (sources []Source) {
-	sources = make([]Source, n)
+func NewSources(n int) (sources Sources) {
+	sources = make(Sources, n)
 	C.walGenSources(C.ALsizei(n), unsafe.Pointer(&sources[0]))
 	return
 }
 
-// DeleteSources() deletes the given sources.
-func DeleteSources(sources []Source) {
-	n := len(sources)
-	C.walDeleteSources(C.ALsizei(n), unsafe.Pointer(&sources[0]))
+// Delete deletes the sources.
+func (self Sources) Delete() {
+	n := len(self)
+	C.walDeleteSources(C.ALsizei(n), unsafe.Pointer(&self[0]))
 }
 
 // Renamed, was SourcePlayv.
-func PlaySources(sources []Source) {
-	C.walSourcePlayv(C.ALsizei(len(sources)), unsafe.Pointer(&sources[0]))
+func (self Sources) Play() {
+	C.walSourcePlayv(C.ALsizei(len(self)), unsafe.Pointer(&self[0]))
 }
 
 // Renamed, was SourceStopv.
-func StopSources(sources []Source) {
-	C.walSourceStopv(C.ALsizei(len(sources)), unsafe.Pointer(&sources[0]))
+func (self Sources) Stop() {
+	C.walSourceStopv(C.ALsizei(len(self)), unsafe.Pointer(&self[0]))
 }
 
 // Renamed, was SourceRewindv.
-func RewindSources(sources []Source) {
-	C.walSourceRewindv(C.ALsizei(len(sources)), unsafe.Pointer(&sources[0]))
+func (self Sources) Rewind() {
+	C.walSourceRewindv(C.ALsizei(len(self)), unsafe.Pointer(&self[0]))
 }
 
 // Renamed, was SourcePausev.
-func PauseSources(sources []Source) {
-	C.walSourcePausev(C.ALsizei(len(sources)), unsafe.Pointer(&sources[0]))
+func (self Sources) Pause() {
+	C.walSourcePausev(C.ALsizei(len(self)), unsafe.Pointer(&self[0]))
 }
 
 // Renamed, was Sourcef.
