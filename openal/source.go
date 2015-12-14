@@ -172,6 +172,12 @@ func (self Source) Getiv(param int32, values []int32) {
 	C.walGetSourceiv(C.ALuint(self), C.ALenum(param), unsafe.Pointer(&values[0]))
 }
 
+// Delete deletes the source.
+// Convenience function, see DeleteSources().
+func (self Source) Delete() {
+	C.walDeleteSource(C.ALuint(self))
+}
+
 // Renamed, was SourcePlay.
 func (self Source) Play() {
 	C.alSourcePlay(C.ALuint(self))
@@ -208,12 +214,6 @@ func (self Source) UnqueueBuffers(buffers []Buffer) {
 // Convenience function, see NewSources().
 func NewSource() Source {
 	return Source(C.walGenSource())
-}
-
-// DeleteSource() deletes a single source.
-// Convenience function, see DeleteSources().
-func DeleteSource(source Source) {
-	C.walDeleteSource(C.ALuint(source))
 }
 
 // Convenience method, see Source.QueueBuffers().

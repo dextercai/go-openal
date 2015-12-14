@@ -40,6 +40,7 @@ func ExamplePlay() {
 		// loop long enough to let the wave file finish
 		time.Sleep(time.Millisecond * 100)
 	}
+	source.Delete()
 	fmt.Println("sound played")
 	// Output: sound played
 }
