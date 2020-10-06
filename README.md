@@ -1,16 +1,11 @@
 OpenAL bindings for Go, which works well with windows platform
 ====================================
 
-I've forked this library from https://github.com/phf/go-openal 
-and have started changing it quite a bit from the original library.
+本项目基于[https://github.com/phf/go-openal](https://github.com/phf/go-openal) 进行修改
 
-I don't have any experience with the original OpenAl libraries.
-In this repo, I edited some of the code to support windows platform. Plz notice it contains openal 1.2 version.
+本仓库包含Openal-soft 1.2的静态链接库和头文件，用于解决Golang在Windows平台编译时出现的找不到``<AL/al.h>``的问题
 
-
-To install simply install the openal and alc libs appropriately for
-your platform, or build them from scratch, then run
-
+## 安装
+```
 go get -u github.com/dextercai/go-openal/
-
-
+```
