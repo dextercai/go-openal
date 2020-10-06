@@ -20,6 +20,10 @@ package openal
 
 //#cgo linux LDFLAGS: -lopenal
 //#cgo darwin LDFLAGS: -framework OpenAL
+//#cgo windows,amd64 CFLAGS:  -I/include
+//#cgo windows,amd64 LDFLAGS: -L/libs/Win64
+//#cgo windows,i386 CFLAGS:  -I/include
+//#cgo windows,i386 LDFLAGS: -L/libs/Win32
 //#include <stdlib.h>
 //#include "local.h"
 /*
