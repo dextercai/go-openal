@@ -2,7 +2,7 @@ package openal_test
 
 import (
 	"fmt"
-	"github.com/dchote/go-openal/openal"
+	"github.com/dextercai/go-openal/openal"
 	"io/ioutil"
 	"time"
 )
